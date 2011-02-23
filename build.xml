@@ -26,5 +26,12 @@
     <target name="run" depends="jar">
         <java jar="build/jar/vectorpen.jar" fork="true"/>
     </target>
+    <target name="run-cli" depends="jar">
+        <java fork="true" classname="com.vectorpen.cli.Main">
+	  <classpath>
+           <pathelement location="build/jar/vectorpen.jar"/>
+         </classpath>
+	</java>
+    </target>
 
 </project>
