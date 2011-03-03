@@ -1,0 +1,34 @@
+<project default="compile">
+
+    <target name="clean">
+        <delete dir="build/cli"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/cli/classes"/>
+        <javac srcdir="src-cli" destdir="build/cli/classes" debug="true">
+	  <classpath>
+	    <path location="build/jar/vectorpen-core.jar"/>
+	  </classpath>
+	</javac>
+    </target>
+
+    <target name="jar" depends="compile">
+      <mkdir dir="build/jar"/>
+      <jar destfile="build/jar/vectorpen-cli.jar" basedir="build/cli/classes">
+	<manifest>
+	  <attribute name="Main-Class" value="com.vectorpen.ui.Main"/>
+	</manifest>
+      </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java fork="true"  classname="com.vectorpen.cli.Main">
+	  <classpath>
+	    <path location="build/jar/vectorpen-core.jar"/>
+	    <path location="build/jar/vectorpen-cli.jar"/>
+	  </classpath>
+	</java>
+    </target>
+
+</project>
