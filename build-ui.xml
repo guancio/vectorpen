@@ -1,0 +1,39 @@
+<project default="compile">
+
+    <target name="clean">
+        <delete dir="build/ui"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/ui/classes"/>
+        <javac srcdir="src-ui" destdir="build/ui/classes" debug="true">
+	  <classpath>
+	    <path location="build/jar/vectorpen-core.jar"/>
+	  </classpath>
+	</javac>
+    </target>
+
+    <target name="jar" depends="compile">
+      <copy file="src-ui/Localizable.properties" tofile="build/ui/classes/Localizable.properties"/>
+      <copy file="src-ui/Localizable_de.properties" tofile="build/ui/classes/Localizable_de.properties"/>
+      <copy todir="build/ui/classes/com/vectorpen/img/">
+	<fileset dir="src-ui/com/vectorpen/img/"/>
+      </copy>
+      <mkdir dir="build/jar"/>
+      <jar destfile="build/jar/vectorpen-ui.jar" basedir="build/ui/classes">
+	<manifest>
+	  <attribute name="Main-Class" value="com.vectorpen.ui.UIMainWindow"/>
+	</manifest>
+      </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java fork="true"  classname="com.vectorpen.ui.UIMainWindow">
+	  <classpath>
+	    <path location="build/jar/vectorpen-core.jar"/>
+	    <path location="build/jar/vectorpen-ui.jar"/>
+	  </classpath>
+	</java>
+    </target>
+
+</project>
