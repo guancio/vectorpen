@@ -1,0 +1,18 @@
+<project default="compile">
+
+    <target name="clean">
+        <delete dir="build/core"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/core/classes"/>
+        <javac srcdir="src-core" destdir="build/core/classes" debug="true"/>
+    </target>
+
+    <target name="jar" depends="compile">
+      <mkdir dir="build/jar"/>
+      <jar destfile="build/jar/vectorpen-core.jar" basedir="build/core/classes">
+      </jar>
+    </target>
+
+</project>
