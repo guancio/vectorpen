@@ -9,6 +9,7 @@
         <javac srcdir="src-cli" destdir="build/cli/classes" debug="true">
 	  <classpath>
 	    <path location="build/jar/vectorpen-core.jar"/>
+	    <path location="lib/commons-cli-1.2.jar"/>
 	  </classpath>
 	</javac>
     </target>
@@ -27,7 +28,12 @@
 	  <classpath>
 	    <path location="build/jar/vectorpen-core.jar"/>
 	    <path location="build/jar/vectorpen-cli.jar"/>
+	    <path location="lib/commons-cli-1.2.jar"/>
 	  </classpath>
+	  <!-- <arg value="-i samples/top/aiptek-mynote.top"/> -->
+	  <arg value="-t guancio"/>
+	  <arg value="-f .top"/>
+	  <!-- <arg value="-h a"/> -->
 	</java>
     </target>
 
