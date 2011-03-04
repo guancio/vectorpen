@@ -1,0 +1,22 @@
+<project default="compile">
+
+    <target name="clean">
+        <delete dir="build/web"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/web/classes"/>
+        <javac srcdir="src-web" destdir="build/web/classes" debug="true">
+	  <classpath>
+	    <path location="build/jar/vectorpen-core.jar"/>
+	  </classpath>
+	</javac>
+    </target>
+
+    <target name="jar" depends="compile">
+      <mkdir dir="build/jar"/>
+      <jar destfile="build/jar/vectorpen-web.jar" basedir="build/web/classes">
+      </jar>
+    </target>
+
+</project>
