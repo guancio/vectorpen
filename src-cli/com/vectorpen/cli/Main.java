@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 
+import java.util.List;
+import java.util.Vector;
+
 import com.vectorpen.core.FileInput;
 import com.vectorpen.core.VectorFile;
 import com.vectorpen.core.Path;
@@ -92,7 +95,7 @@ public class Main {
 	    title = title.trim();
 	output = line.getOptionValue("o");
 	if (output != null)
-	    output = title.trim();
+	    output = output.trim();
 
 	// System.out.println(input);
 	// System.out.println(title);
@@ -100,27 +103,39 @@ public class Main {
 
 	
 	try {
-	    VectorFile file = null;
+	    List<VectorFile> files = new Vector<VectorFile>();
 
 	    if (input != null) {
-		file = FileInput.readFile(new File(input));
+		File in = new File(input);
+		if (in.isDirectory()) {
+		    for (String iInput : in.list()) {
+			// System.out.println(input + "/" + iInput);
+			File iIn = new File(input + "/" + iInput);
+			files.add(FileInput.readFile(iIn));
+		    }
+		}
+		else {
+		    files.add(FileInput.readFile(in));
+		}
 	    }
 	    else {
-		file = FileInput.readStream(System.in, title, format);
+		files.add(FileInput.readStream(System.in, title, format));
 	    }
 
-	    OutputStream out = System.out;
-	    if (output != null)
-		out = new FileOutputStream(output);
+	    for (VectorFile f : files) {
+		// System.out.println(f.getTitle());
+		OutputStream out = System.out;
+		if (output != null && files.size() == 1)
+		    out = new FileOutputStream(output);
+		else if (output != null)
+		    out = new FileOutputStream(output + "/" + f.getTitle() + ".svg");
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
+		writer.write(f.getSVGRepresentation());
+		writer.flush();
+		
+		System.gc();
+	    }
 	    
-	    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
-	    writer.write(file.getSVGRepresentation());
-	    writer.close();
-	    writer = null;
-	    
-	    out.flush();
-	    
-	    System.gc();
 	}
 	catch (java.io.IOException ex) {
 	    ex.printStackTrace();

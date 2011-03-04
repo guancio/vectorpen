@@ -31,8 +31,13 @@
 	    <path location="lib/commons-cli-1.2.jar"/>
 	  </classpath>
 	  <!-- <arg value="-i samples/top/aiptek-mynote.top"/> -->
-	  <arg value="-t guancio"/>
-	  <arg value="-f .top"/>
+
+	  <arg value="-i samples/top"/>
+	  <arg value="-o output"/>
+
+	  <!-- <arg value="-t guancio"/> -->
+	  <!-- <arg value="-f .top"/> -->
+
 	  <!-- <arg value="-h a"/> -->
 	</java>
     </target>
