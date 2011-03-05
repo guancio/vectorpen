@@ -41,6 +41,9 @@ import com.vectorpen.core.PDFModule;
 import com.vectorpen.core.Size;
 import com.vectorpen.core.VectorFile;
 
+import com.vectorpen.ui.util.ImageRepresentation;
+import com.vectorpen.ui.util.AwtWrapper;
+
 @SuppressWarnings("serial")
 public final class VectorFiles extends AbstractTableModel implements TableModelListener
 {
@@ -112,11 +115,11 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 				if (vectorFile.getAspectRatio() == Size.PORTRAIT)
 				{
-					image = vectorFile.getImageRepresentationByHeight(PREVIEW_SIZE);
+				    image = ImageRepresentation.getImageRepresentationByHeight(vectorFile,PREVIEW_SIZE);
 				}
 				else
 				{
-					image = vectorFile.getImageRepresentationByWidth(PREVIEW_SIZE);
+				    image = ImageRepresentation.getImageRepresentationByWidth(vectorFile, PREVIEW_SIZE);
 				}
 
 				ImageIcon preview = previews.remove(row);
@@ -204,7 +207,7 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 	public Color getLineColor(int index)
 	{
-		return vectorFiles.get(index).getLineColor();
+	    return AwtWrapper.convertColor(vectorFiles.get(index).getLineColor());
 	}
 
 	public boolean getHasLineColor(int index)
@@ -259,7 +262,7 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		for (int index = 0; index < count; index++)
 		{
 			vectorFiles.get(rows[index]).setHasLineColor(true);
-			vectorFiles.get(rows[index]).setLineColor(lineColor);
+			vectorFiles.get(rows[index]).setLineColor(AwtWrapper.importColor(lineColor));
 		}
 
 		fireTableRowsUpdated(rows[0], rows[count - 1]);
@@ -291,11 +294,11 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 			if (vectorFile.getAspectRatio() == Size.PORTRAIT)
 			{
-				image = vectorFile.getImageRepresentationByHeight(PREVIEW_SIZE);
+			    image = ImageRepresentation.getImageRepresentationByHeight(vectorFile,PREVIEW_SIZE);
 			}
 			else
 			{
-				image = vectorFile.getImageRepresentationByWidth(PREVIEW_SIZE);
+			    image = ImageRepresentation.getImageRepresentationByWidth(vectorFile,PREVIEW_SIZE);
 			}
 
 			ImageIcon preview = new ImageIcon(image);
@@ -387,12 +390,12 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 	public BufferedImage getZoomedImageRepresentation(int index)
 	{
-		return vectorFiles.get(index).getZoomedImageRepresentation();
+	    return ImageRepresentation.getZoomedImageRepresentation(vectorFiles.get(index));
 	}
 
 	public BufferedImage getImageRepresentationByPPI(int ppi, int index, boolean opaque)
 	{
-		return vectorFiles.get(index).getImageRepresentationByPPI(ppi, opaque);
+	    return ImageRepresentation.getImageRepresentationByPPI(vectorFiles.get(index),ppi, opaque);
 	}
 
 	public String getPDFRepresentation(DocInfoDict docInfoDict, int index)

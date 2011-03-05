@@ -36,7 +36,7 @@ public final class Size
 	private float height;
 	private int aspectRatio;
 
-	protected Size(float width, float height)
+	public Size(float width, float height)
 	{
 		this.width = width;
 		this.height = height;
@@ -44,12 +44,12 @@ public final class Size
 		this.setAspectRatio();
 	}
 
-	protected float getWidth()
+	public float getWidth()
 	{
 		return this.width;
 	}
 
-	protected float getHeight()
+	public float getHeight()
 	{
 		return this.height;
 	}

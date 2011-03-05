@@ -32,7 +32,7 @@ public final class Scale
 	private float offsetX;
 	private float offsetY;
 
-	protected Scale(Size sourceSize, Size targetSize)
+	public Scale(Size sourceSize, Size targetSize)
 	{
 		int sourceAspectRatio = sourceSize.getAspectRatio();
 		int targetAspectRatio = targetSize.getAspectRatio();
