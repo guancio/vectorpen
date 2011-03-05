@@ -27,6 +27,7 @@
 package com.vectorpen.core;
 
 import com.vectorpen.core.util.Color;
+import com.vectorpen.core.util.GeneralPath;
 import java.util.ArrayList;
 
 public final class Path
