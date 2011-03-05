@@ -26,6 +26,7 @@
 
 package com.vectorpen.core;
 
+import com.vectorpen.core.util.Color;
 import java.util.ArrayList;
 
 public final class VectorFile
@@ -175,194 +176,194 @@ public final class VectorFile
 		zoom = ZOOM_ACTUAL_SIZE;
 	}
 
-	public BufferedImage getZoomedImageRepresentation()
-	{
-		return this.getImageRepresentationByPPI(zoom, true);
-	}
+	// public BufferedImage getZoomedImageRepresentation()
+	// {
+	// 	return this.getImageRepresentationByPPI(zoom, true);
+	// }
 
-	public void rotateByAngle(int angle)
-	{
-		if (angle == -270 || angle == -180 || angle == -90 || angle == 90 || angle == 180 || angle == 270)
-		{
-			int count = this.paths.size();
+	// public void rotateByAngle(int angle)
+	// {
+	// 	if (angle == -270 || angle == -180 || angle == -90 || angle == 90 || angle == 180 || angle == 270)
+	// 	{
+	// 		int count = this.paths.size();
 
-			for (int index = 0; index < count; index++)
-			{
-				this.paths.get(index).rotateByAngle(angle, this.size);
-			}
+	// 		for (int index = 0; index < count; index++)
+	// 		{
+	// 			this.paths.get(index).rotateByAngle(angle, this.size);
+	// 		}
 
-			this.hasChanged = true;
-		}
+	// 		this.hasChanged = true;
+	// 	}
 
-		if (angle == -270 || angle == -90 || angle == 90 || angle == 270)
-			this.size.rotate();
-	}
+	// 	if (angle == -270 || angle == -90 || angle == 90 || angle == 270)
+	// 		this.size.rotate();
+	// }
 
-	public BufferedImage getImageRepresentation()
-	{
-		return this.getImageRepresentationByPPI(ZOOM_ACTUAL_SIZE, true);
-	}
+	// public BufferedImage getImageRepresentation()
+	// {
+	// 	return this.getImageRepresentationByPPI(ZOOM_ACTUAL_SIZE, true);
+	// }
 
-	public BufferedImage getImageRepresentationByPPI(int ppi, boolean opaque)
-	{
-		Size paperSize = this.getPaperSize(Math.abs(ppi));
-		Scale scale = new Scale(this.size, paperSize);
+	// public BufferedImage getImageRepresentationByPPI(int ppi, boolean opaque)
+	// {
+	// 	Size paperSize = this.getPaperSize(Math.abs(ppi));
+	// 	Scale scale = new Scale(this.size, paperSize);
 
-		float lineWidth = this.lineWidth * ((float)ppi / 72.0f);
-		if (lineWidth < LINE_WIDTH_MIN) lineWidth = LINE_WIDTH_MIN;
+	// 	float lineWidth = this.lineWidth * ((float)ppi / 72.0f);
+	// 	if (lineWidth < LINE_WIDTH_MIN) lineWidth = LINE_WIDTH_MIN;
 
-		BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	// 	BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
-		int width = (int)paperSize.getWidth() + 1;
-		int height = (int)paperSize.getHeight() + 1;
+	// 	int width = (int)paperSize.getWidth() + 1;
+	// 	int height = (int)paperSize.getHeight() + 1;
 
-		BufferedImage imageRepresentation;
+	// 	BufferedImage imageRepresentation;
 
-		if (opaque)
-		{
-			imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-		}
-		else
-		{
-			imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-		}
+	// 	if (opaque)
+	// 	{
+	// 		imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+	// 	}
+	// 	else
+	// 	{
+	// 		imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+	// 	}
 
-		Graphics2D graphics = imageRepresentation.createGraphics();
-		graphics.setStroke(stroke);
+	// 	Graphics2D graphics = imageRepresentation.createGraphics();
+	// 	graphics.setStroke(stroke);
 
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		if (opaque)
-		{
-			graphics.setColor(Color.WHITE);
-			graphics.fillRect(0, 0, width, height);
-		}
+	// 	if (opaque)
+	// 	{
+	// 		graphics.setColor(Color.WHITE);
+	// 		graphics.fillRect(0, 0, width, height);
+	// 	}
 
-		int count = this.paths.size();
+	// 	int count = this.paths.size();
 
-		for (int index = 0; index < count; index++)
-		{
-			Path path = this.paths.get(index);
+	// 	for (int index = 0; index < count; index++)
+	// 	{
+	// 		Path path = this.paths.get(index);
 
-			if (this.hasLineColor)
-			{
-				graphics.setColor(this.lineColor);
-			}
-			else
-			{
-				graphics.setColor(path.getLineColor());
-			}
+	// 		if (this.hasLineColor)
+	// 		{
+	// 			graphics.setColor(this.lineColor);
+	// 		}
+	// 		else
+	// 		{
+	// 			graphics.setColor(path.getLineColor());
+	// 		}
 
-			graphics.draw(path.generalPathRepresentation(scale));
-		}
+	// 		graphics.draw(path.generalPathRepresentation(scale));
+	// 	}
 
-		imageRepresentation.flush();
+	// 	imageRepresentation.flush();
 
-		return imageRepresentation;
-	}
+	// 	return imageRepresentation;
+	// }
 
-	public BufferedImage getImageRepresentationByWidth(int width)
-	{
-		Size paperSize = this.getPaperSize(72);
+	// public BufferedImage getImageRepresentationByWidth(int width)
+	// {
+	// 	Size paperSize = this.getPaperSize(72);
 
-		float height = paperSize.getHeight() / (paperSize.getWidth() / width);
+	// 	float height = paperSize.getHeight() / (paperSize.getWidth() / width);
 
-		Size size = new Size(width, height);
-		Scale scale = new Scale(this.size, size);
+	// 	Size size = new Size(width, height);
+	// 	Scale scale = new Scale(this.size, size);
 
-		float lineWidth = this.lineWidth * (width / paperSize.getWidth());
-		if (lineWidth < LINE_WIDTH_MIN) lineWidth = LINE_WIDTH_MIN;
+	// 	float lineWidth = this.lineWidth * (width / paperSize.getWidth());
+	// 	if (lineWidth < LINE_WIDTH_MIN) lineWidth = LINE_WIDTH_MIN;
 
-		BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	// 	BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
-		BufferedImage imageRepresentation = new BufferedImage(width, (int)height + 1, BufferedImage.TYPE_4BYTE_ABGR);
+	// 	BufferedImage imageRepresentation = new BufferedImage(width, (int)height + 1, BufferedImage.TYPE_4BYTE_ABGR);
 
-		Graphics2D graphics = imageRepresentation.createGraphics();
-		graphics.setStroke(stroke);
+	// 	Graphics2D graphics = imageRepresentation.createGraphics();
+	// 	graphics.setStroke(stroke);
 
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		graphics.setColor(Color.WHITE);
-		graphics.fillRect(0, 0, width, (int)height + 1);
+	// 	graphics.setColor(Color.WHITE);
+	// 	graphics.fillRect(0, 0, width, (int)height + 1);
 
-		int count = this.paths.size();
+	// 	int count = this.paths.size();
 
-		for (int index = 0; index < count; index++)
-		{
-			Path path = this.paths.get(index);
+	// 	for (int index = 0; index < count; index++)
+	// 	{
+	// 		Path path = this.paths.get(index);
 
-			if (this.hasLineColor)
-			{
-				graphics.setColor(this.lineColor);
-			}
-			else
-			{
-				graphics.setColor(path.getLineColor());
-			}
+	// 		if (this.hasLineColor)
+	// 		{
+	// 			graphics.setColor(this.lineColor);
+	// 		}
+	// 		else
+	// 		{
+	// 			graphics.setColor(path.getLineColor());
+	// 		}
 
-			graphics.draw(path.generalPathRepresentation(scale));
-		}
+	// 		graphics.draw(path.generalPathRepresentation(scale));
+	// 	}
 
-		imageRepresentation.flush();
+	// 	imageRepresentation.flush();
 
-		return imageRepresentation;
-	}
+	// 	return imageRepresentation;
+	// }
 
-	public BufferedImage getImageRepresentationByHeight(int height)
-	{
-		Size paperSize = this.getPaperSize(72);
+	// public BufferedImage getImageRepresentationByHeight(int height)
+	// {
+	// 	Size paperSize = this.getPaperSize(72);
 
-		float width = paperSize.getWidth() / (paperSize.getHeight() / height);
+	// 	float width = paperSize.getWidth() / (paperSize.getHeight() / height);
 
-		Size size = new Size(width, height);
-		Scale scale = new Scale(this.size, size);
+	// 	Size size = new Size(width, height);
+	// 	Scale scale = new Scale(this.size, size);
 
-		float lineWidth = this.lineWidth * (height / paperSize.getHeight());
-		if (lineWidth < LINE_WIDTH_MIN) lineWidth = LINE_WIDTH_MIN;
+	// 	float lineWidth = this.lineWidth * (height / paperSize.getHeight());
+	// 	if (lineWidth < LINE_WIDTH_MIN) lineWidth = LINE_WIDTH_MIN;
 
-		BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	// 	BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
-		BufferedImage imageRepresentation = new BufferedImage((int)width + 1, height, BufferedImage.TYPE_4BYTE_ABGR);
+	// 	BufferedImage imageRepresentation = new BufferedImage((int)width + 1, height, BufferedImage.TYPE_4BYTE_ABGR);
 
-		Graphics2D graphics = imageRepresentation.createGraphics();
-		graphics.setStroke(stroke);
+	// 	Graphics2D graphics = imageRepresentation.createGraphics();
+	// 	graphics.setStroke(stroke);
 
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	// 	graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		graphics.setColor(Color.WHITE);
-		graphics.fillRect(0, 0, (int)width + 1, height);
+	// 	graphics.setColor(Color.WHITE);
+	// 	graphics.fillRect(0, 0, (int)width + 1, height);
 
-		int count = this.paths.size();
+	// 	int count = this.paths.size();
 
-		for (int index = 0; index < count; index++)
-		{
-			Path path = this.paths.get(index);
+	// 	for (int index = 0; index < count; index++)
+	// 	{
+	// 		Path path = this.paths.get(index);
 
-			if (this.hasLineColor)
-			{
-				graphics.setColor(this.lineColor);
-			}
-			else
-			{
-				graphics.setColor(path.getLineColor());
-			}
+	// 		if (this.hasLineColor)
+	// 		{
+	// 			graphics.setColor(this.lineColor);
+	// 		}
+	// 		else
+	// 		{
+	// 			graphics.setColor(path.getLineColor());
+	// 		}
 
-			graphics.draw(path.generalPathRepresentation(scale));
-		}
+	// 		graphics.draw(path.generalPathRepresentation(scale));
+	// 	}
 
-		imageRepresentation.flush();
+	// 	imageRepresentation.flush();
 
-		return imageRepresentation;
-	}
+	// 	return imageRepresentation;
+	// }
 
 	public String getSVGRepresentation()
 	{
