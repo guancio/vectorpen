@@ -44,4 +44,8 @@ public class GeneralPath {
 			   )
 	);
     }
+
+    public List<Operation> getOperations() {
+	return operations;
+    }
 }

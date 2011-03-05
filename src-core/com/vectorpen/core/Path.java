@@ -42,7 +42,7 @@ public final class Path
 		this.lineColor = lineColor;
 	}
 
-	protected Color getLineColor()
+	public Color getLineColor()
 	{
 		return this.lineColor;
 	}
@@ -62,7 +62,7 @@ public final class Path
 		}
 	}
 
-	protected GeneralPath generalPathRepresentation(Scale scale)
+	public GeneralPath generalPathRepresentation(Scale scale)
 	{
 		GeneralPath generalPath = new GeneralPath();
 
