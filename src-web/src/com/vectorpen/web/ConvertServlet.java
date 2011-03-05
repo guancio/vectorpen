@@ -59,6 +59,7 @@ public class ConvertServlet extends HttpServlet {
 		    VectorFile vec = FileInput.readStream(stream, title, format);
 		    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream() , "ISO-8859-1"));
 		    writer.write(vec.getSVGRepresentation());
+		    writer.flush();
 
 		    log.warning("Conversion completed");
 		}
