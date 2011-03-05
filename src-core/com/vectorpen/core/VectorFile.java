@@ -26,11 +26,6 @@
 
 package com.vectorpen.core;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public final class VectorFile

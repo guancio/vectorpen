@@ -26,8 +26,6 @@
 
 package com.vectorpen.core;
 
-import java.awt.Color;
-import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
 public final class Path
