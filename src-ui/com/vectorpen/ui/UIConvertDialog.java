@@ -88,6 +88,8 @@ import com.vectorpen.core.DocInfoDict;
 import com.vectorpen.core.PDFModule;
 import com.vectorpen.core.VectorFile;
 
+import com.vectorpen.ui.util.ImageRepresentation;
+
 @SuppressWarnings("serial")
 public final class UIConvertDialog extends JDialog
 {
@@ -1657,7 +1659,7 @@ public final class UIConvertDialog extends JDialog
 							imageWriter = ImageIO.getImageWritersByFormatName("jpg").next();
 							imageWriter.setOutput(imageOutputStream);
 
-							image = tableModel.vectorFiles.get(i).getImageRepresentationByPPI(Integer.parseInt((String)jpegPPIBox.getSelectedItem()), true);
+							image = ImageRepresentation.getImageRepresentationByPPI(tableModel.vectorFiles.get(i), Integer.parseInt((String)jpegPPIBox.getSelectedItem()), true);
 
 							Float quality = (float)qualitySlider.getValue();
 
@@ -1740,7 +1742,8 @@ public final class UIConvertDialog extends JDialog
 							imageWriter = ImageIO.getImageWritersByFormatName("png").next();
 							imageWriter.setOutput(imageOutputStream);
 
-							image = tableModel.vectorFiles.get(i).getImageRepresentationByPPI(Integer.parseInt((String)pngPPIBox.getSelectedItem()), !pngCheckBox.isSelected());
+							image = ImageRepresentation.getImageRepresentationByPPI(tableModel.vectorFiles.get(i), Integer.parseInt((String)pngPPIBox.getSelectedItem()), !pngCheckBox.isSelected());
+
 
 							imageWriter.write(image);
 
@@ -1816,7 +1819,8 @@ public final class UIConvertDialog extends JDialog
 							imageWriter = ImageIO.getImageWritersByFormatName("bmp").next();
 							imageWriter.setOutput(imageOutputStream);
 
-							image = tableModel.vectorFiles.get(i).getImageRepresentationByPPI(Integer.parseInt((String)bmpPPIBox.getSelectedItem()), true);
+							image = ImageRepresentation.getImageRepresentationByPPI(tableModel.vectorFiles.get(i), Integer.parseInt((String)bmpPPIBox.getSelectedItem()), true);
+
 
 							imageWriter.write(image);
 

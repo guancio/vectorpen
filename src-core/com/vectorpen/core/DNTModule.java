@@ -26,7 +26,7 @@
 
 package com.vectorpen.core;
 
-import java.awt.Color;
+import com.vectorpen.core.util.Color;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
