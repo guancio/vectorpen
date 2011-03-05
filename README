@@ -2,7 +2,9 @@ VectorPen is an OpenSource converter for files of digital notepads used with Mac
 
 View, edit and convert your Notes in one go. Real vector graphics (PDF & SVG) will be generated. Infinitely scaleable without loss of quality!
 
-The original product site is [[http://vectorpen.com/|VectorPen]]
+The original product site is http://vectorpen.com
+
+You can try a WebApp using the VectorPen core at http://vectorpen-dev.appspot.com. Currently the WebApp can be used to try if VectorPen supports your note files.
 
 Product Name
 File Format
