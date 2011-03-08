@@ -14,6 +14,7 @@ import com.vectorpen.core.FileInput;
 import com.vectorpen.core.VectorFile;
 import com.vectorpen.core.Path;
 
+import com.vectorpen.core.PDFiTextModule;
 import com.vectorpen.core.PDFModule;
 import com.vectorpen.core.DocInfoDict;
 
@@ -147,13 +148,17 @@ public class Main {
 		}
 	    }
 	    else if ("pdf".equalsIgnoreCase(outputFormat)) {
-		OutputStream out = new FileOutputStream(output);
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
+		OutputStream out = System.out;
+		if (output != null)
+		    out = new FileOutputStream(output);
 		List<String> keys = new Vector<String>();
 		keys.add("ProducedWithVectorPen");
 		DocInfoDict docInfoDict = new DocInfoDict("Title", "Author", "Subject", keys);
-		writer.write(PDFModule.getPDFData(files, docInfoDict));
-		writer.flush();
+
+		// BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
+		// writer.write(PDFModule.getPDFData(files, docInfoDict));
+		// writer.flush();
+		PDFiTextModule.writePDFData(files, docInfoDict, out);
 		System.gc();
 	    }
 	}
