@@ -27,15 +27,16 @@
 package com.vectorpen.core;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class DocInfoDict
 {
 	private String title;
 	private String author;
 	private String subject;
-	private ArrayList<String> keywords;
+	private List<String> keywords;
 
-	public DocInfoDict(String title, String author, String subject, ArrayList<String> keywords)
+	public DocInfoDict(String title, String author, String subject, List<String> keywords)
 	{
 		this.setTitle(title);
 		this.setAuthor(author);
@@ -58,7 +59,7 @@ public final class DocInfoDict
 		return this.subject;
 	}
 
-	protected ArrayList<String> getKeywords()
+	protected List<String> getKeywords()
 	{
 		return this.keywords;
 	}
@@ -99,7 +100,7 @@ public final class DocInfoDict
 		}
 	}
 
-	protected void setKeywords(ArrayList<String> keywords)
+	protected void setKeywords(List<String> keywords)
 	{
 		if (keywords != null)
 		{

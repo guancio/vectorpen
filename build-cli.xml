@@ -33,7 +33,11 @@
 	  <!-- <arg value="-i samples/top/aiptek-mynote.top"/> -->
 
 	  <arg value="-i samples/top"/>
-	  <arg value="-o output"/>
+	  <arg value="-o output/res.pdf"/>
+	  <arg value="-x pdf"/>
+
+	  <!-- <arg value="-i samples/top"/> -->
+	  <!-- <arg value="-o output"/> -->
 
 	  <!-- <arg value="-t guancio"/> -->
 	  <!-- <arg value="-f .top"/> -->

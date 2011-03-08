@@ -27,13 +27,14 @@
 package com.vectorpen.core;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 
 public final class PDFModule
 {
 	public static final String PRODUCER = "VectorPen";
 
-	public static String getPDFData(ArrayList<VectorFile> vectorFiles, DocInfoDict docInfoDict)
+	public static String getPDFData(List<VectorFile> vectorFiles, DocInfoDict docInfoDict)
 	throws Exception
 	{
 		try
@@ -107,7 +108,7 @@ public final class PDFModule
 		return objectData.toString();
 	}
 
-	private static String createDocumentInformationDictionary(ArrayList<VectorFile> vectorFiles, DocInfoDict docInfoDict)
+	private static String createDocumentInformationDictionary(List<VectorFile> vectorFiles, DocInfoDict docInfoDict)
 	throws Exception
 	{
 		StringBuffer objectData = new StringBuffer();
@@ -155,7 +156,7 @@ public final class PDFModule
 		return objectData.toString();
 	}
 
-	private static String getCreator(ArrayList<VectorFile> vectorFiles)
+	private static String getCreator(List<VectorFile> vectorFiles)
 	throws Exception
 	{
 		StringBuffer creator = new StringBuffer();
@@ -245,7 +246,7 @@ public final class PDFModule
 		return String.format("D:%d%02d%02d%02d%02d%02d%s%02d'%02d'", year, month, day, hour, minute, second, Z, HH, mm);
 	}
 
-	private static String createPages(ArrayList<VectorFile> vectorFiles)
+	private static String createPages(List<VectorFile> vectorFiles)
 	throws Exception
 	{
 		StringBuffer objectData = new StringBuffer();
@@ -292,7 +293,7 @@ public final class PDFModule
 		return objectData.toString();
 	}
 
-	private static String createContentStreams(ArrayList<VectorFile> vectorFiles)
+	private static String createContentStreams(List<VectorFile> vectorFiles)
 	throws Exception
 	{
 		StringBuffer objectData = new StringBuffer();
