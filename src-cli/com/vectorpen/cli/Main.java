@@ -14,6 +14,9 @@ import com.vectorpen.core.FileInput;
 import com.vectorpen.core.VectorFile;
 import com.vectorpen.core.Path;
 
+import com.vectorpen.core.PDFModule;
+import com.vectorpen.core.DocInfoDict;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.OptionBuilder;
@@ -61,6 +64,13 @@ public class Main {
 			  .withLongOpt("output") 
 			  .create( "o" )
 			  );
+	options.addOption(
+			  OptionBuilder.withArgName( "output-format")
+			  .hasArg()
+			  .withDescription(  "use given format for output. e.g. svg or pdf" )
+			  .withLongOpt("output-format") 
+			  .create( "x" )
+			  );
 
 	CommandLineParser parser = new GnuParser();
 	CommandLine line = null;
@@ -77,6 +87,7 @@ public class Main {
 	String format = null;
 	String title = null;
 	String output = null;
+	String outputFormat = null;
 
 	if (line.hasOption("h")) {
 	    HelpFormatter formatter = new HelpFormatter();
@@ -96,12 +107,12 @@ public class Main {
 	output = line.getOptionValue("o");
 	if (output != null)
 	    output = output.trim();
+	outputFormat = line.getOptionValue("x");
+	if (outputFormat != null)
+	    outputFormat = outputFormat.trim();
+	else
+	    outputFormat = "svg";
 
-	// System.out.println(input);
-	// System.out.println(title);
-	// System.out.println(format);
-
-	
 	try {
 	    List<VectorFile> files = new Vector<VectorFile>();
 
@@ -109,7 +120,6 @@ public class Main {
 		File in = new File(input);
 		if (in.isDirectory()) {
 		    for (String iInput : in.list()) {
-			// System.out.println(input + "/" + iInput);
 			File iIn = new File(input + "/" + iInput);
 			files.add(FileInput.readFile(iIn));
 		    }
@@ -121,26 +131,39 @@ public class Main {
 	    else {
 		files.add(FileInput.readStream(System.in, title, format));
 	    }
-
-	    for (VectorFile f : files) {
-		// System.out.println(f.getTitle());
-		OutputStream out = System.out;
-		if (output != null && files.size() == 1)
-		    out = new FileOutputStream(output);
-		else if (output != null)
-		    out = new FileOutputStream(output + "/" + f.getTitle() + ".svg");
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
-		writer.write(f.getSVGRepresentation());
-		writer.flush();
+	    
+	    if ("svg".equalsIgnoreCase(outputFormat)) {
+		for (VectorFile f : files) {
+		    OutputStream out = System.out;
+		    if (output != null && files.size() == 1)
+			out = new FileOutputStream(output);
+		    else if (output != null)
+			out = new FileOutputStream(output + "/" + f.getTitle() + ".svg");
+		    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
+		    writer.write(f.getSVGRepresentation());
+		    writer.flush();
 		
+		    System.gc();
+		}
+	    }
+	    else if ("pdf".equalsIgnoreCase(outputFormat)) {
+		OutputStream out = new FileOutputStream(output);
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
+		List<String> keys = new Vector<String>();
+		keys.add("ProducedWithVectorPen");
+		DocInfoDict docInfoDict = new DocInfoDict("Title", "Author", "Subject", keys);
+		writer.write(PDFModule.getPDFData(files, docInfoDict));
+		writer.flush();
 		System.gc();
 	    }
-	    
 	}
 	catch (java.io.IOException ex) {
 	    ex.printStackTrace();
 	}
 	catch (java.util.zip.DataFormatException ex) {
+	    ex.printStackTrace();
+	}
+	catch (Exception ex) {
 	    ex.printStackTrace();
 	}
     }
