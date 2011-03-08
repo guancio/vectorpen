@@ -29,6 +29,7 @@ package com.vectorpen.core;
 import com.vectorpen.core.util.Color;
 import com.vectorpen.core.util.GeneralPath;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Path
 {
@@ -46,6 +47,10 @@ public final class Path
 	{
 		return this.lineColor;
 	}
+
+    public List<Point> getPoints() {
+	return this.points;
+    }
 
 	protected void addPoint(Point point)
 	{

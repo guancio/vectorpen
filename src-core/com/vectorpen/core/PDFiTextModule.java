@@ -12,6 +12,8 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfContentByte;
 
+import com.vectorpen.core.util.Color;
+
 public class PDFiTextModule {
     public static void writePDFData(List<VectorFile> vectorFiles, DocInfoDict docInfoDict, OutputStream stream) throws Exception {
 	
@@ -39,12 +41,44 @@ public class PDFiTextModule {
 	document.addCreationDate();
 	document.addProducer();
 
-	document.add(new Paragraph("Hello Pdf"));
+	// document.add(new Paragraph("Hello Pdf"));
+
 
 	PdfContentByte cn = pdf.getDirectContent();
-	cn.moveTo(100, 100);
-	cn.lineTo(200, 200);
-	cn.stroke();
+
+	int i=0;
+	for (VectorFile file : vectorFiles) {
+	    document.newPage();
+	    // document.add(new Paragraph(String.valueOf(i++)));
+	    Size paperSize = file.getPaperSize(72);
+	    Scale scale = new Scale(file.getSize(), paperSize);
+	    for (Path path : file.getPaths()) {
+		int count = path.getPoints().size();
+		if (count < 2)
+		    continue;
+
+		Color color = path.getLineColor();
+		if (file.getHasLineColor()) {
+		    color = file.getLineColor();
+		}
+		// TODO: Color managment
+		float height = file.getPaperSize(72).getHeight();
+
+		Point start = path.getPoints().get(0).cloneByScale(scale);
+		float x = start.getX();
+		float y = height - start.getY();
+		cn.moveTo(x, y);
+
+		for (int index = 2; index < count; index++) {
+		    Point point = path.getPoints().get(index).cloneByScale(scale);
+		    float xR = point.getX();
+		    float yR = height - point.getY();
+
+		    cn.lineTo(xR, yR);
+		}
+		cn.stroke();
+	    }
+	}
 
 	document.close();
     }
