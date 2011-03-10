@@ -17,6 +17,8 @@ import com.vectorpen.core.Path;
 import com.vectorpen.core.PDFiTextModule;
 import com.vectorpen.core.DocInfoDict;
 
+import com.vectorpen.core.VectorPen;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.OptionBuilder;
@@ -79,7 +81,7 @@ public class Main {
 	}
 	catch (ParseException ex) {
 	    HelpFormatter formatter = new HelpFormatter();
-	    formatter.printHelp( "vectorpen", options );
+	    formatter.printHelp( VectorPen.NAME, options );
 	    return;
 	}
 
@@ -151,7 +153,7 @@ public class Main {
 		if (output != null)
 		    out = new FileOutputStream(output);
 		List<String> keys = new Vector<String>();
-		keys.add("ProducedWithVectorPen");
+		keys.add("Produced-With-"+VectorPen.NAME);
 		DocInfoDict docInfoDict = new DocInfoDict("Title", "Author", "Subject", keys);
 
 		PDFiTextModule.writePDFData(files, docInfoDict, out);
