@@ -204,7 +204,7 @@ public final class VectorFile
 
 		svgRepresentation.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r");
 		svgRepresentation.append("<!-- SVG Generator: ");
-		svgRepresentation.append("VectorPen");
+		svgRepresentation.append(VectorPen.NAME);
 		svgRepresentation.append(" -->\r");
 		svgRepresentation.append("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\r");
 		svgRepresentation.append("<svg version=\"1.0\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 ");
