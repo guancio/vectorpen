@@ -6,7 +6,11 @@
 
     <target name="compile">
         <mkdir dir="build/core/classes"/>
-        <javac srcdir="src-core" destdir="build/core/classes" debug="true"/>
+        <javac srcdir="src-core" destdir="build/core/classes" debug="true">
+	  <classpath>
+	    <path location="lib/iText-5.0.6.jar"/>
+	  </classpath>
+	</javac>
     </target>
 
     <target name="jar" depends="compile">

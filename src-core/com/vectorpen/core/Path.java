@@ -29,6 +29,7 @@ package com.vectorpen.core;
 import com.vectorpen.core.util.Color;
 import com.vectorpen.core.util.GeneralPath;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Path
 {
@@ -46,6 +47,10 @@ public final class Path
 	{
 		return this.lineColor;
 	}
+
+    public List<Point> getPoints() {
+	return this.points;
+    }
 
 	protected void addPoint(Point point)
 	{
@@ -82,46 +87,6 @@ public final class Path
 		return generalPath;
 	}
 
-	protected String getPDFRepresentation(Scale scale, VectorFile vectorFile)
-	{
-		StringBuffer pdfRepresentation = new StringBuffer();
-
-		Point point = this.points.get(0).cloneByScale(scale);
-
-		if (vectorFile.getHasLineColor())
-		{
-			pdfRepresentation.append(getColorString(vectorFile.getLineColor()));
-		}
-		else
-		{
-			pdfRepresentation.append(getColorString(this.lineColor));
-		}
-
-		float height = vectorFile.getPaperSize(72).getHeight();
-
-		float x = point.getX();
-		float y = height - point.getY();
-
-		pdfRepresentation.append(String.format("q 1 0 0 1 %s %s cm\r", Float.toString(x), Float.toString(y)));
-		pdfRepresentation.append("0 0 m\r");
-
-		int count = this.points.size();
-
-		for (int index = 1; index < count; index++)
-		{
-			point = this.points.get(index).cloneByScale(scale);
-
-			float xR = point.getX() - x;
-			float yR = height - point.getY() - y;
-
-			pdfRepresentation.append(String.format("%s %s l\r", Float.toString(xR), Float.toString(yR)));
-		}
-
-		pdfRepresentation.append("S\r");
-		pdfRepresentation.append("Q\r");
-
-		return pdfRepresentation.toString();
-	}
 
 	protected String getSVGRepresentation(Scale scale, VectorFile vectorFile)
 	{

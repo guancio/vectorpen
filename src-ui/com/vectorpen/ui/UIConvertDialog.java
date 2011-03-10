@@ -85,8 +85,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.vectorpen.core.DocInfoDict;
-import com.vectorpen.core.PDFModule;
 import com.vectorpen.core.VectorFile;
+import com.vectorpen.core.PDFiTextModule;
 
 import com.vectorpen.ui.util.ImageRepresentation;
 
@@ -1436,10 +1436,7 @@ public final class UIConvertDialog extends JDialog
 								subjectField.getText(),
 								keywords);
 
-						writer = new BufferedWriter(new OutputStreamWriter(fileOutputStream , "ISO-8859-1"));
-						writer.write(PDFModule.getPDFData(tableModel.vectorFiles, docInfoDict));
-						writer.close();
-						writer = null;
+						PDFiTextModule.writePDFData(tableModel.vectorFiles, docInfoDict, fileOutputStream);
 
 						fileOutputStream.close();
 
@@ -1512,10 +1509,7 @@ public final class UIConvertDialog extends JDialog
 								vectorFiles = new ArrayList<VectorFile>();
 								vectorFiles.add(tableModel.vectorFiles.get(i));
 
-								writer = new BufferedWriter(new OutputStreamWriter(fileOutputStream , "ISO-8859-1"));
-								writer.write(PDFModule.getPDFData(vectorFiles, docInfoDict));
-								writer.close();
-								writer = null;
+								PDFiTextModule.writePDFData(vectorFiles, docInfoDict, fileOutputStream);
 
 								fileOutputStream.close();
 

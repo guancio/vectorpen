@@ -29,10 +29,13 @@
 	    <path location="build/jar/vectorpen-core.jar"/>
 	    <path location="build/jar/vectorpen-cli.jar"/>
 	    <path location="lib/commons-cli-1.2.jar"/>
+	    <path location="lib/iText-5.0.6.jar"/>
 	  </classpath>
 	  <!-- <arg value="-i samples/top/aiptek-mynote.top"/> -->
 
 	  <arg value="-i samples/top"/>
+	  <!-- <arg value="-i samples/dnt"/> -->
+	  <!-- <arg value="-i samples/dhw"/> -->
 	  <arg value="-o output/res.pdf"/>
 	  <arg value="-x pdf"/>
 
