@@ -5,12 +5,14 @@ import com.vectorpen.core.VectorFile;
 import com.vectorpen.core.Size;
 import com.vectorpen.core.Scale;
 import com.vectorpen.core.Path;
+import com.vectorpen.core.Point;
 
 import java.awt.image.BufferedImage;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Color;
+import java.awt.geom.GeneralPath;
 
 public class ImageRepresentation {
 	public static BufferedImage getZoomedImageRepresentation(VectorFile file)
@@ -80,7 +82,16 @@ public class ImageRepresentation {
 			    graphics.setColor(AwtWrapper.convertColor(path.getLineColor()));
 			}
 
-		    graphics.draw(AwtWrapper.convertGeneralPath(path.generalPathRepresentation(scale)));
+		    GeneralPath geom = new GeneralPath();
+		    Point point = path.getPoints().get(0).cloneByScale(scale);
+		    geom.moveTo(point.getX(), point.getY());
+		    int pathSize = path.getPoints().size();
+		    for (int i = 1; i < pathSize; i++) {
+			point = path.getPoints().get(i).cloneByScale(scale);
+			geom.lineTo(point.getX(), point.getY());
+		    }
+
+		    graphics.draw(geom);
 		}
 
 		imageRepresentation.flush();
@@ -130,7 +141,16 @@ public class ImageRepresentation {
 			    graphics.setColor(AwtWrapper.convertColor(path.getLineColor()));
 			}
 
-		    graphics.draw(AwtWrapper.convertGeneralPath(path.generalPathRepresentation(scale)));
+		    GeneralPath geom = new GeneralPath();
+		    Point point = path.getPoints().get(0).cloneByScale(scale);
+		    geom.moveTo(point.getX(), point.getY());
+		    int pathSize = path.getPoints().size();
+		    for (int i = 1; i < pathSize; i++) {
+			point = path.getPoints().get(i).cloneByScale(scale);
+			geom.lineTo(point.getX(), point.getY());
+		    }
+
+		    graphics.draw(geom);
 		}
 
 		imageRepresentation.flush();
@@ -180,7 +200,15 @@ public class ImageRepresentation {
 			    graphics.setColor(AwtWrapper.convertColor(path.getLineColor()));
 			}
 
-		    graphics.draw(AwtWrapper.convertGeneralPath(path.generalPathRepresentation(scale)));
+		    GeneralPath geom = new GeneralPath();
+		    Point point = path.getPoints().get(0).cloneByScale(scale);
+		    geom.moveTo(point.getX(), point.getY());
+		    int pathSize = path.getPoints().size();
+		    for (int i = 1; i < pathSize; i++) {
+			point = path.getPoints().get(i).cloneByScale(scale);
+			geom.lineTo(point.getX(), point.getY());
+		    }
+		    graphics.draw(geom);
 		}
 
 		imageRepresentation.flush();
