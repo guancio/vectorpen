@@ -37,12 +37,12 @@ public final class Point
 		this.y = y;
 	}
 
-	protected float getX()
+	public float getX()
 	{
 		return this.x;
 	}
 
-	protected float getY()
+	public float getY()
 	{
 		return this.y;
 	}
@@ -77,7 +77,7 @@ public final class Point
 		}
 	}
 
-	protected Point cloneByScale(Scale scale)
+	public Point cloneByScale(Scale scale)
 	{
 		float x = scale.getOffsetX() + (this.x / scale.getScale());
 		float y = scale.getOffsetY() + (this.y / scale.getScale());

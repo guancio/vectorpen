@@ -27,7 +27,6 @@
 package com.vectorpen.core;
 
 import com.vectorpen.core.util.Color;
-import com.vectorpen.core.util.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,26 +64,6 @@ public final class Path
 		{
 			this.points.get(index).rotateByAngle(angle, size.clone());
 		}
-	}
-
-	public GeneralPath generalPathRepresentation(Scale scale)
-	{
-		GeneralPath generalPath = new GeneralPath();
-
-		Point point = this.points.get(0).cloneByScale(scale);
-
-		generalPath.moveTo(point.getX(), point.getY());
-
-		int count = this.points.size();
-
-		for (int index = 1; index < count; index++)
-		{
-			point = this.points.get(index).cloneByScale(scale);
-
-			generalPath.lineTo(point.getX(), point.getY());
-		}
-
-		return generalPath;
 	}
 
 
