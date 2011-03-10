@@ -38,6 +38,8 @@
 	  <!-- <arg value="-i samples/dhw"/> -->
 	  <arg value="-o output/res.pdf"/>
 	  <arg value="-x pdf"/>
+	  <!-- <arg value="-m output/Report_EVL_SAGE.pdf"/> -->
+	  <arg value="-m output/FurtherParticulars.pdf"/>
 
 	  <!-- <arg value="-i samples/top"/> -->
 	  <!-- <arg value="-o output"/> -->

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 
 import java.util.List;
 import java.util.Vector;
@@ -73,6 +74,13 @@ public class Main {
 			  .withLongOpt("output-format") 
 			  .create( "x" )
 			  );
+	options.addOption(
+			  OptionBuilder.withArgName( "merge")
+			  .hasArg()
+			  .withDescription(  "merge the output with the given file" )
+			  .withLongOpt("merge") 
+			  .create( "m" )
+			  );
 
 	CommandLineParser parser = new GnuParser();
 	CommandLine line = null;
@@ -90,6 +98,7 @@ public class Main {
 	String title = null;
 	String output = null;
 	String outputFormat = null;
+	String merge = null;
 
 	if (line.hasOption("h")) {
 	    HelpFormatter formatter = new HelpFormatter();
@@ -114,6 +123,9 @@ public class Main {
 	    outputFormat = outputFormat.trim();
 	else
 	    outputFormat = "svg";
+	merge = line.getOptionValue("m");
+	if (merge != null)
+	    merge = merge.trim();
 
 	try {
 	    List<VectorFile> files = new Vector<VectorFile>();
@@ -156,7 +168,11 @@ public class Main {
 		keys.add("Produced-With-"+VectorPen.NAME);
 		DocInfoDict docInfoDict = new DocInfoDict("Title", "Author", "Subject", keys);
 
-		PDFiTextModule.writePDFData(files, docInfoDict, out);
+		if (merge == null)
+		    PDFiTextModule.writePDFData(files, docInfoDict, out);
+		else
+		    PDFiTextModule.mergePDF(files, docInfoDict, out, new FileInputStream(merge));
+
 		System.gc();
 	    }
 	}

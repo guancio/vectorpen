@@ -6,18 +6,26 @@ import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.InputStream;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfImportedPage;
 
 import com.vectorpen.core.util.Color;
 
 public class PDFiTextModule {
-    public static void writePDFData(List<VectorFile> vectorFiles, DocInfoDict docInfoDict, OutputStream stream) throws Exception {
-	
+    public static void mergePDF(List<VectorFile> vectorFiles, DocInfoDict docInfoDict, OutputStream stream, InputStream background) throws Exception {
 	Document document = new Document();
+	
+	PdfReader pdfReader = null;
+	if (background != null)
+	    pdfReader = new PdfReader(background);
+
+	
 	PdfWriter pdf = PdfWriter.getInstance(document,stream);
 	document.open();
 
@@ -46,10 +54,18 @@ public class PDFiTextModule {
 
 	PdfContentByte cn = pdf.getDirectContent();
 
-	int i=0;
+	int page=0;
 	for (VectorFile file : vectorFiles) {
 	    document.newPage();
-	    // document.add(new Paragraph(String.valueOf(i++)));
+	    page+=1;
+	    
+	    if (pdfReader != null) {
+		if (page <= pdfReader.getNumberOfPages()) {
+		    PdfImportedPage bk = pdf.getImportedPage(pdfReader, page);
+		    cn.addTemplate(bk, 0, 0);
+		}
+	    }
+
 	    Size paperSize = file.getPaperSize(72);
 	    Scale scale = new Scale(file.getSize(), paperSize);
 	    for (Path path : file.getPaths()) {
@@ -80,7 +96,20 @@ public class PDFiTextModule {
 	    }
 	}
 
+	if (pdfReader != null) {
+	    for (page+=1; page<=pdfReader.getNumberOfPages(); page++) {
+		document.newPage();
+		PdfImportedPage bk = pdf.getImportedPage(pdfReader, page);
+		cn.addTemplate(bk, 0, 0);
+	    }
+	}
+
+
 	document.close();
+	return;
+    }
+    public static void writePDFData(List<VectorFile> vectorFiles, DocInfoDict docInfoDict, OutputStream stream) throws Exception {
+	PDFiTextModule.mergePDF(vectorFiles, docInfoDict, stream, null);
     }
 
     private static String getCreator(List<VectorFile> vectorFiles)
