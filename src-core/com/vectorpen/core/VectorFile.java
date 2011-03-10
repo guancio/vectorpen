@@ -204,7 +204,7 @@ public final class VectorFile
 
 		svgRepresentation.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r");
 		svgRepresentation.append("<!-- SVG Generator: ");
-		svgRepresentation.append(PDFModule.PRODUCER);
+		svgRepresentation.append("VectorPen");
 		svgRepresentation.append(" -->\r");
 		svgRepresentation.append("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\r");
 		svgRepresentation.append("<svg version=\"1.0\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 ");
@@ -222,29 +222,6 @@ public final class VectorFile
 		svgRepresentation.append("</svg>");
 
 		return svgRepresentation.toString();
-	}
-
-	protected String getPDFRepresentation()
-	{
-		StringBuffer pdfRepresentation = new StringBuffer();
-
-		Size paperSize = this.getPaperSize(72);
-		Scale scale = new Scale(this.size, paperSize);
-
-		pdfRepresentation.append("/Layer /MC0 BDC\r");
-		pdfRepresentation.append(String.format("%s w 1 j 1 J\r", this.lineWidth));
-		pdfRepresentation.append("/GS0 gs\r");
-
-		int count = this.paths.size();
-
-		for (int index = 0; index < count; index++)
-		{
-			pdfRepresentation.append(this.paths.get(index).getPDFRepresentation(scale, this));
-		}
-
-		pdfRepresentation.append("EMC\r");
-
-		return pdfRepresentation.toString();
 	}
 
 	public Size getPaperSize(int ppi)

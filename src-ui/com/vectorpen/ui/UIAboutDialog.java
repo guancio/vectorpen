@@ -47,8 +47,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import com.vectorpen.core.PDFModule;
-
 @SuppressWarnings("serial")
 public final class UIAboutDialog extends JDialog implements MouseListener
 {
@@ -188,7 +186,7 @@ public final class UIAboutDialog extends JDialog implements MouseListener
 		int height = 0;
 
 		JLabel version = new JLabel();
-		version.setText(PDFModule.PRODUCER + " 1.0");
+		version.setText("VectorPen" + " 1.0");
 		version.setForeground(COLOR_LABEL_VERSION);
 		version.setFont(new Font(null, Font.BOLD, 20));
 		version.setHorizontalAlignment(SwingConstants.LEFT);

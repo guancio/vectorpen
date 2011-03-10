@@ -34,6 +34,8 @@
 	  <!-- <arg value="-i samples/top/aiptek-mynote.top"/> -->
 
 	  <arg value="-i samples/top"/>
+	  <!-- <arg value="-i samples/dnt"/> -->
+	  <!-- <arg value="-i samples/dhw"/> -->
 	  <arg value="-o output/res.pdf"/>
 	  <arg value="-x pdf"/>
 

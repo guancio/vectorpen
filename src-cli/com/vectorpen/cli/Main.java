@@ -15,7 +15,6 @@ import com.vectorpen.core.VectorFile;
 import com.vectorpen.core.Path;
 
 import com.vectorpen.core.PDFiTextModule;
-import com.vectorpen.core.PDFModule;
 import com.vectorpen.core.DocInfoDict;
 
 import org.apache.commons.cli.Option;
@@ -155,9 +154,6 @@ public class Main {
 		keys.add("ProducedWithVectorPen");
 		DocInfoDict docInfoDict = new DocInfoDict("Title", "Author", "Subject", keys);
 
-		// BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out , "ISO-8859-1"));
-		// writer.write(PDFModule.getPDFData(files, docInfoDict));
-		// writer.flush();
 		PDFiTextModule.writePDFData(files, docInfoDict, out);
 		System.gc();
 	    }

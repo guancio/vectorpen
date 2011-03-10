@@ -30,6 +30,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.io.OutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.event.TableModelEvent;
@@ -37,7 +38,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.vectorpen.core.DocInfoDict;
-import com.vectorpen.core.PDFModule;
+import com.vectorpen.core.PDFiTextModule;
 import com.vectorpen.core.Size;
 import com.vectorpen.core.VectorFile;
 
@@ -398,9 +399,8 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 	    return ImageRepresentation.getImageRepresentationByPPI(vectorFiles.get(index),ppi, opaque);
 	}
 
-	public String getPDFRepresentation(DocInfoDict docInfoDict, int index)
+    public void writePDFRepresentation(DocInfoDict docInfoDict, int index,  OutputStream stream)
 	{
-		String pdfRepresentation = null;
 		ArrayList<VectorFile> vectorFiles = new ArrayList<VectorFile>();
 
 		try
@@ -416,13 +416,13 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 					vectorFiles.add(this.vectorFiles.get(rows[index]));
 				}
 
-				pdfRepresentation = PDFModule.getPDFData(vectorFiles, docInfoDict);
+				PDFiTextModule.writePDFData(vectorFiles, docInfoDict, stream);
 			}
 			else
 			{
 				vectorFiles.add(this.vectorFiles.get(index));
 
-				pdfRepresentation = PDFModule.getPDFData(vectorFiles, docInfoDict);
+				PDFiTextModule.writePDFData(vectorFiles, docInfoDict, stream);
 			}
 		}
 		catch (Exception exception)
@@ -431,8 +431,6 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		}
 
 		vectorFiles = null;
-
-		return pdfRepresentation;
 	}
 
 	public ArrayList<String> getSVGRepresentation()
