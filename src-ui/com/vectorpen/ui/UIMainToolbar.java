@@ -127,9 +127,11 @@ public final class UIMainToolbar extends JToolBar
 	private String labelZoom;
 	private String textAdd;
 	private String textRemove;
+	private String textAddBackground;
 	private String textConvert;
 	private JButton addButton;
 	private JButton removeButton;
+	private JButton addBackgroundButton;
 	private JButton rotateLeftButton;
 	private JButton rotateSeparatorButton;
 	private JButton rotateRightButton;
@@ -139,6 +141,7 @@ public final class UIMainToolbar extends JToolBar
 	private JButton convertButton;
 	private JPanel addButtonPanel;
 	private JPanel removeButtonPanel;
+	private JPanel addBackgroundButtonPanel;
 	private JPanel rotateLeftButtonPanel;
 	private JPanel rotateSeparatorButtonPanel;
 	private JPanel rotateRightButtonPanel;
@@ -166,6 +169,7 @@ public final class UIMainToolbar extends JToolBar
 
 		createAddButton();
 		createRemoveButton();
+		createAddBackgroundButton();
 		createRotateLeftButton();
 		createRotateSeparatorButton();
 		createRotateRightButton();
@@ -196,6 +200,8 @@ public final class UIMainToolbar extends JToolBar
 		add(addButtonPanel);
 		addSeparator(smallSeparatorSize);
 		add(removeButtonPanel);
+		addSeparator(smallSeparatorSize);
+		add(addBackgroundButtonPanel);
 		addSeparator(bigSeparatorSize);
 		addSeparator();
 		addSeparator(bigSeparatorSize);
@@ -295,6 +301,41 @@ public final class UIMainToolbar extends JToolBar
 		removeButtonPanel.add(label);
 		removeButtonPanel.setMinimumSize(removeButtonPanel.getPreferredSize());
 		removeButtonPanel.setMaximumSize(removeButtonPanel.getPreferredSize());
+	}
+
+	private void createAddBackgroundButton()
+	{
+		URL normalPath = IMAGE_PATH_ADD_NORMAL;
+		URL disabledPath = IMAGE_PATH_ADD_DISABLED;
+		URL rolloverPath = IMAGE_PATH_ADD_ROLLOVER;
+		URL pressedPath = IMAGE_PATH_ADD_PRESSED;
+
+		Action action = Actions.getInstance().getAddBackground();
+
+		addBackgroundButton = new JButton(action);
+		addBackgroundButton.setIcon(new ImageIcon(normalPath));
+		addBackgroundButton.setDisabledIcon(new ImageIcon(disabledPath));
+		addBackgroundButton.setRolloverIcon(new ImageIcon(rolloverPath));
+		addBackgroundButton.setPressedIcon(new ImageIcon(pressedPath));
+		addBackgroundButton.setText(null);
+		addBackgroundButton.setEnabled(true);
+		addBackgroundButton.setBorderPainted(false);
+		addBackgroundButton.setContentAreaFilled(false);
+		addBackgroundButton.setFocusable(false);
+		addBackgroundButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		JLabel label = new JLabel(textAddBackground);
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		label.setFont(addButton.getFont());
+		label.setForeground(COLOR_LABEL);
+
+		addBackgroundButtonPanel = new JPanel();
+		addBackgroundButtonPanel.setLayout(new BoxLayout(addBackgroundButtonPanel, BoxLayout.PAGE_AXIS));
+		addBackgroundButtonPanel.setOpaque(false);
+		addBackgroundButtonPanel.add(addBackgroundButton);
+		addBackgroundButtonPanel.add(label);
+		addBackgroundButtonPanel.setMinimumSize(addBackgroundButtonPanel.getPreferredSize());
+		addBackgroundButtonPanel.setMaximumSize(addBackgroundButtonPanel.getPreferredSize());
 	}
 
 	private void createRotateLeftButton()

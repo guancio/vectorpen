@@ -48,6 +48,7 @@ public final class Actions
 
 	private String textAdd;
 	private String textRemove;
+	private String textAddBackground;
 	private String textRotateLeft;
 	private String textRotateRight;
 	private String textZoomIn;
@@ -59,6 +60,7 @@ public final class Actions
 	private String textHelp;
 	private Action add;
 	private Action remove;
+	private Action addBackground;
 	private Action rotateLeft;
 	private Action rotateRight;
 	private Action zoomIn;
@@ -85,6 +87,7 @@ public final class Actions
 
 		KeyStroke addKey = KeyStroke.getKeyStroke(KeyEvent.VK_O, shortcutKeyMask);
 		KeyStroke removeKey = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, shortcutKeyMask);
+		KeyStroke addBackgroundKey = KeyStroke.getKeyStroke(KeyEvent.VK_B, shortcutKeyMask);
 		KeyStroke rotateLeftKey = KeyStroke.getKeyStroke(KeyEvent.VK_L, shortcutKeyMask);
 		KeyStroke rotateRightKey = KeyStroke.getKeyStroke(KeyEvent.VK_R, shortcutKeyMask);
 		KeyStroke zoomInKey = KeyStroke.getKeyStroke(KeyEvent.VK_1, shortcutKeyMask);
@@ -94,6 +97,7 @@ public final class Actions
 
 		add = new Add(textAdd, addKey);
 		remove = new Remove(textRemove, removeKey);
+		addBackground = new Remove(textAddBackground, addBackgroundKey);
 		rotateLeft = new RotateLeft(textRotateLeft, rotateLeftKey);
 		rotateRight = new RotateRight(textRotateRight, rotateRightKey);
 		zoomIn = new ZoomIn(textZoomIn, zoomInKey);
@@ -111,6 +115,7 @@ public final class Actions
 
 		textAdd = bundle.getString("Actions.Text.Add");
 		textRemove = bundle.getString("Actions.Text.Remove");
+		textAddBackground = bundle.getString("Actions.Text.AddBackground");
 		textRotateLeft = bundle.getString("Actions.Text.RotateLeft");
 		textRotateRight = bundle.getString("Actions.Text.RotateRight");
 		textZoomIn = bundle.getString("Actions.Text.ZoomIn");
@@ -130,6 +135,10 @@ public final class Actions
 	public Action getRemove()
 	{
 		return remove;
+	}
+
+	public Action getAddBackground() {
+	    return addBackground;
 	}
 
 	public Action getRotateLeft()
@@ -240,6 +249,36 @@ public final class Actions
 			UIMainTable.getInstance().revalidate();
 		}
 	}
+
+    private class AddBackground extends AbstractAction {
+	public AddBackground(String text, KeyStroke shortcut) {
+	    super(text);
+	    putValue(ACCELERATOR_KEY, shortcut);
+	}
+
+	public void actionPerformed(ActionEvent event) {
+	    System.gc();
+	    int returnValue = UIFileChooser.getInstance().showOpenDialog(null);
+	    if (returnValue == JFileChooser.APPROVE_OPTION) {
+		File files[] = UIFileChooser.getInstance().getSelectedFiles();
+		int count = files.length;
+		ArrayList<VectorFile> vectorFiles = new ArrayList<VectorFile>();
+		for (int index = 0; index < count; index++) {
+		    try	{
+			vectorFiles.add(FileInput.readFile(files[index]));
+		    }
+		    catch (Exception exception)	{
+			UIExceptionDialog.showDialog(exception);
+		    }
+		}
+		if (vectorFiles.size() > 0)
+		    VectorFiles.getInstance().add(vectorFiles);
+	    }
+
+	    UIMainTable.getInstance().repaint();
+	    UIMainTable.getInstance().revalidate();
+	}
+    }
 
 	private class RotateLeft extends AbstractAction
 	{
