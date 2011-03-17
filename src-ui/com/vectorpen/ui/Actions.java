@@ -258,7 +258,22 @@ public final class Actions
 
 	public void actionPerformed(ActionEvent event) {
 	    System.gc();
-	    System.out.println("Add Background pressed");
+	    int returnValue = UIFileBkgChooser.getInstance().showOpenDialog(null);
+	    if (returnValue == JFileChooser.APPROVE_OPTION) {
+		File files[] = UIFileBkgChooser.getInstance().getSelectedFiles();
+		int count = files.length;
+		for (int index = 0; index < count; index++) {
+		    try	{
+			System.out.println(files[index]);
+		    }
+		    catch (Exception exception)	{
+			UIExceptionDialog.showDialog(exception);
+		    }
+		}
+
+		//if (vectorFiles.size() > 0)
+		//    VectorFiles.getInstance().add(vectorFiles);
+	    }
 
 	    UIMainTable.getInstance().repaint();
 	    UIMainTable.getInstance().revalidate();
