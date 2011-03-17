@@ -230,6 +230,7 @@ public final class UIMainToolbar extends JToolBar
 		labelZoom = bundle.getString("MainToolbar.Label.Zoom");
 		textAdd = bundle.getString("Actions.Text.Add");
 		textRemove = bundle.getString("Actions.Text.Remove");
+		textAddBackground = bundle.getString("Actions.Text.AddBackground");
 		textConvert = bundle.getString("Actions.Text.Convert");
 	}
 

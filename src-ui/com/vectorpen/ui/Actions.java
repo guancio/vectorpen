@@ -97,7 +97,7 @@ public final class Actions
 
 		add = new Add(textAdd, addKey);
 		remove = new Remove(textRemove, removeKey);
-		addBackground = new Remove(textAddBackground, addBackgroundKey);
+		addBackground = new AddBackground(textAddBackground, addBackgroundKey);
 		rotateLeft = new RotateLeft(textRotateLeft, rotateLeftKey);
 		rotateRight = new RotateRight(textRotateRight, rotateRightKey);
 		zoomIn = new ZoomIn(textZoomIn, zoomInKey);
@@ -258,22 +258,7 @@ public final class Actions
 
 	public void actionPerformed(ActionEvent event) {
 	    System.gc();
-	    int returnValue = UIFileChooser.getInstance().showOpenDialog(null);
-	    if (returnValue == JFileChooser.APPROVE_OPTION) {
-		File files[] = UIFileChooser.getInstance().getSelectedFiles();
-		int count = files.length;
-		ArrayList<VectorFile> vectorFiles = new ArrayList<VectorFile>();
-		for (int index = 0; index < count; index++) {
-		    try	{
-			vectorFiles.add(FileInput.readFile(files[index]));
-		    }
-		    catch (Exception exception)	{
-			UIExceptionDialog.showDialog(exception);
-		    }
-		}
-		if (vectorFiles.size() > 0)
-		    VectorFiles.getInstance().add(vectorFiles);
-	    }
+	    System.out.println("Add Background pressed");
 
 	    UIMainTable.getInstance().repaint();
 	    UIMainTable.getInstance().revalidate();
