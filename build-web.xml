@@ -71,7 +71,7 @@
     <mkdir dir="${war.dir}/WEB-INF/classes"/>
     <mkdir dir="${war.dir}/WEB-INF/lib"/>
 
-    <copy todir="${src-web}/WEB-INF/lib">
+    <copy todir="src-web/src/WEB-INF/lib">
       <fileset dir="build/jar">
         <include name="vectorpen-core.jar"/>
       </fileset>

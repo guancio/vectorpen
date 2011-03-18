@@ -21,7 +21,7 @@ import java.io.BufferedWriter;
 
 import com.vectorpen.core.FileInput;
 import com.vectorpen.core.VectorFile;
-import com.vectorpen.core.PDFModule;
+import com.vectorpen.core.PDFiTextModule;
 import com.vectorpen.core.DocInfoDict;
 
 public class ConvertServlet extends HttpServlet {
@@ -87,14 +87,12 @@ public class ConvertServlet extends HttpServlet {
 		resp.setContentType("application/pdf" );
 		resp.setHeader( "Content-Disposition", "attachment; filename=\"" + vec.getTitle() + ".pdf\"" );
 
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream() , "ISO-8859-1"));
 		List<String> keys = new Vector<String>();
 		keys.add("ProducedWithVectorPen");
 		List<VectorFile> vecs = new Vector<VectorFile>();
 		vecs.add(vec);
 		DocInfoDict docInfoDict = new DocInfoDict(vec.getTitle(), "Author", "Subject", keys);
-		writer.write(PDFModule.getPDFData(vecs, docInfoDict));
-		writer.flush();
+		PDFiTextModule.writePDFData(vecs, docInfoDict, resp.getOutputStream());
 	    }
 	    
 	    log.warning("Conversion completed");
