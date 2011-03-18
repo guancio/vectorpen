@@ -32,6 +32,7 @@
 	  <classpath>
 	    <path location="build/jar/vectorpen-core.jar"/>
 	    <path location="build/jar/vectorpen-ui.jar"/>
+	    <path location="lib/iText-5.0.6.jar"/>
 	  </classpath>
 	</java>
     </target>

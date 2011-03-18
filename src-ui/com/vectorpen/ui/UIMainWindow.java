@@ -43,7 +43,7 @@ import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-import com.vectorpen.core.PDFModule;
+import com.vectorpen.core.VectorPen;
 
 @SuppressWarnings("serial")
 public final class UIMainWindow extends JFrame implements ComponentListener
@@ -102,7 +102,7 @@ public final class UIMainWindow extends JFrame implements ComponentListener
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(IMAGE_PATH_ICON));
 		setLayout(new BorderLayout());
-		setTitle(PDFModule.PRODUCER);
+		setTitle(VectorPen.NAME);
 		addComponentListener(this);
 
 		rightPanel = new JPanel(new BorderLayout());
