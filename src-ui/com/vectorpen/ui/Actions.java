@@ -264,7 +264,8 @@ public final class Actions
 		int count = files.length;
 		for (int index = 0; index < count; index++) {
 		    try	{
-			System.out.println(files[index]);
+			System.out.println(files[index].getAbsolutePath());
+			VectorFiles.getInstance().addBackground(files[index].getAbsolutePath() );
 		    }
 		    catch (Exception exception)	{
 			UIExceptionDialog.showDialog(exception);

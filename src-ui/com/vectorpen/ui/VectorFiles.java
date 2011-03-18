@@ -50,6 +50,12 @@ import com.jmupdf.PdfPage;
 import com.jmupdf.exceptions.PDFException;
 import com.jmupdf.exceptions.PDFSecurityException;
 
+import com.vectorpen.core.Size;
+import com.vectorpen.core.Scale;
+import java.awt.Graphics2D;
+import java.awt.BasicStroke;
+
+
 @SuppressWarnings("serial")
 public final class VectorFiles extends AbstractTableModel implements TableModelListener
 {
@@ -86,16 +92,8 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		previews = new ArrayList<ImageIcon>();
 
 		backgrounds = new ArrayList<String>();
-		try {
-		    // Open document
-		    pdfDoc = new PdfDocument("/home/guancio/Downloads/wp_transitioning.pdf", null);
-		}
-		catch (PDFSecurityException ex) {
-		    ex.printStackTrace();
-		}
-		catch (PDFException ex) {
-		    ex.printStackTrace();
-		}
+
+		pdfDoc = null;
 
 	}
 
@@ -356,6 +354,23 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		fireTableRowsDeleted(rows[0], rows[count]);
 	}
 
+	public void addBackground(String file)
+	{
+		try {
+		    if (pdfDoc != null)
+			pdfDoc.dispose();
+		    pdfDoc = null;
+		    // Open document
+		    pdfDoc = new PdfDocument(file, null);
+		}
+		catch (PDFSecurityException ex) {
+		    ex.printStackTrace();
+		}
+		catch (PDFException ex) {
+		    ex.printStackTrace();
+		}
+	}
+
 	public void rotateByAngle(int angle)
 	{
 		int rows[] = UIMainTable.getInstance().getSelectedRows();
@@ -413,22 +428,68 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		return titles;
 	}
 
-	public BufferedImage getZoomedImageRepresentation(int index)
-	{
+    protected BufferedImage emptyPage(VectorFile file, int ppi,  boolean opaque) {
+	Size paperSize = file.getPaperSize(Math.abs(ppi));
+	Scale scale = new Scale(file.getSize(), paperSize);
+	
+	float lineWidth = file.getLineWidth() * ((float)ppi / 72.0f);
+	if (lineWidth < VectorFile.LINE_WIDTH_MIN) lineWidth = VectorFile.LINE_WIDTH_MIN;
+	
+	int width = (int)paperSize.getWidth() + 1;
+	int height = (int)paperSize.getHeight() + 1;
+	
+	BufferedImage imageRepresentation;
+	if (opaque) {
+	    imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+	}
+	else {
+	    imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+	}
+
+	BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	
+	Graphics2D graphics = imageRepresentation.createGraphics();
+	graphics.setStroke(stroke);
+
+
+	if (opaque) {
+	    graphics.setColor(java.awt.Color.WHITE);
+	    graphics.fillRect(0, 0, width, height);
+	}
+
+	return imageRepresentation;
+    }
+
+    public BufferedImage getBasePage(int index) {
 	    int page = index+1;
 	    VectorFile file = vectorFiles.get(index);
 	    float zoom = ((float)file.getZoom()) / VectorFile.ZOOM_ACTUAL_SIZE;
 	    BufferedImage img = null;
 
+	    if (pdfDoc == null)
+		return emptyPage(file, file.getZoom(), true);
+
+	    if (pdfDoc.getPageCount() < page)
+		return emptyPage(file, file.getZoom(), true);
+
 	    // Get page in RGB
 	    PdfPage pdfPage = pdfDoc.getPage(page, PdfDocument.IMAGE_TYPE_RGB, zoom, PdfPage.PAGE_ROTATE_AUTO);
 	    if (pdfPage != null) {
 		img = pdfPage.getImage();
+		// Always make sure to dispose!!!
+		pdfPage.dispose();
 	    }
-	    // Always make sure to dispose!!!
-	    pdfPage.dispose();
-	    //pdfDoc.dispose();
+	    else {
+		return emptyPage(file, file.getZoom(), true);
+	    }
 
+	    return img;
+    }
+
+	public BufferedImage getZoomedImageRepresentation(int index)
+	{
+	    VectorFile file = vectorFiles.get(index);
+	    BufferedImage img = getBasePage(index);
 	    ImageRepresentation.overlayImageRepresentationByPPI(img, file, file.getZoom(), false);
 	    return img;
 	}
