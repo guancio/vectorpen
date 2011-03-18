@@ -45,6 +45,11 @@ import com.vectorpen.core.VectorFile;
 import com.vectorpen.ui.util.ImageRepresentation;
 import com.vectorpen.ui.util.AwtWrapper;
 
+import com.jmupdf.PdfDocument;
+import com.jmupdf.PdfPage;
+import com.jmupdf.exceptions.PDFException;
+import com.jmupdf.exceptions.PDFSecurityException;
+
 @SuppressWarnings("serial")
 public final class VectorFiles extends AbstractTableModel implements TableModelListener
 {
@@ -56,6 +61,12 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 	private String columnNameTitle;
 	private ArrayList<VectorFile> vectorFiles;
 	private ArrayList<ImageIcon> previews;
+
+	private ArrayList<String> backgrounds;
+
+    // Open document
+    private PdfDocument pdfDoc = null;
+
 
 	public static synchronized VectorFiles getInstance()
 	{
@@ -73,6 +84,19 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 		vectorFiles = new ArrayList<VectorFile>();
 		previews = new ArrayList<ImageIcon>();
+
+		backgrounds = new ArrayList<String>();
+		try {
+		    // Open document
+		    pdfDoc = new PdfDocument("/home/guancio/Downloads/wp_transitioning.pdf", null);
+		}
+		catch (PDFSecurityException ex) {
+		    ex.printStackTrace();
+		}
+		catch (PDFException ex) {
+		    ex.printStackTrace();
+		}
+
 	}
 
 	private void getLocalizedStrings()
@@ -391,7 +415,22 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 	public BufferedImage getZoomedImageRepresentation(int index)
 	{
-	    return ImageRepresentation.getZoomedImageRepresentation(vectorFiles.get(index));
+	    int page = index+1;
+	    VectorFile file = vectorFiles.get(index);
+	    float zoom = ((float)file.getZoom()) / VectorFile.ZOOM_ACTUAL_SIZE;
+	    BufferedImage img = null;
+
+	    // Get page in RGB
+	    PdfPage pdfPage = pdfDoc.getPage(page, PdfDocument.IMAGE_TYPE_RGB, zoom, PdfPage.PAGE_ROTATE_AUTO);
+	    if (pdfPage != null) {
+		img = pdfPage.getImage();
+	    }
+	    // Always make sure to dispose!!!
+	    pdfPage.dispose();
+	    //pdfDoc.dispose();
+
+	    ImageRepresentation.overlayImageRepresentationByPPI(img, file, file.getZoom(), false);
+	    return img;
 	}
 
 	public BufferedImage getImageRepresentationByPPI(int ppi, int index, boolean opaque)

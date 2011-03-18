@@ -9,6 +9,7 @@
         <javac srcdir="src-ui" destdir="build/ui/classes" debug="true">
 	  <classpath>
 	    <path location="build/jar/vectorpen-core.jar"/>
+	    <path location="lib/JMuPdf.jar"/>
 	  </classpath>
 	</javac>
     </target>
@@ -27,12 +28,15 @@
       </jar>
     </target>
 
+
     <target name="run" depends="jar">
         <java fork="true"  classname="com.vectorpen.ui.UIMainWindow">
+	  <env key="LD_LIBRARY_PATH" path="./lib" />
 	  <classpath>
 	    <path location="build/jar/vectorpen-core.jar"/>
 	    <path location="build/jar/vectorpen-ui.jar"/>
 	    <path location="lib/iText-5.0.6.jar"/>
+	    <path location="lib/JMuPdf.jar"/>
 	  </classpath>
 	</java>
     </target>

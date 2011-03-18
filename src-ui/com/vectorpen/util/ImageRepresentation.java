@@ -99,6 +99,81 @@ public class ImageRepresentation {
 		return imageRepresentation;
 	}
 
+
+    public static BufferedImage overlayImageRepresentationByPPI(BufferedImage imageRepresentation, VectorFile file, int ppi, boolean opaque)
+	{
+		Size paperSize = file.getPaperSize(Math.abs(ppi));
+		Scale scale = new Scale(file.getSize(), paperSize);
+
+		float lineWidth = file.getLineWidth() * ((float)ppi / 72.0f);
+		if (lineWidth < VectorFile.LINE_WIDTH_MIN) lineWidth = VectorFile.LINE_WIDTH_MIN;
+
+		BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
+		int width = (int)paperSize.getWidth() + 1;
+		int height = (int)paperSize.getHeight() + 1;
+
+		/*
+		if (opaque)
+		{
+			imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		}
+		else
+		{
+			imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		}
+		*/
+
+		Graphics2D graphics = imageRepresentation.createGraphics();
+		graphics.setStroke(stroke);
+
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+		if (opaque)
+		{
+			graphics.setColor(java.awt.Color.WHITE);
+			graphics.fillRect(0, 0, width, height);
+		}
+
+		int count = file.getPaths().size();
+
+		for (int index = 0; index < count; index++)
+		{
+		    Path path = file.getPaths().get(index);
+
+		    if (file.getHasLineColor())
+			{
+			    graphics.setColor(
+                                  AwtWrapper.convertColor(
+				     file.getLineColor()
+							  )
+					      );
+			}
+			else
+			{
+			    graphics.setColor(AwtWrapper.convertColor(path.getLineColor()));
+			}
+
+		    GeneralPath geom = new GeneralPath();
+		    Point point = path.getPoints().get(0).cloneByScale(scale);
+		    geom.moveTo(point.getX(), point.getY());
+		    int pathSize = path.getPoints().size();
+		    for (int i = 1; i < pathSize; i++) {
+			point = path.getPoints().get(i).cloneByScale(scale);
+			geom.lineTo(point.getX(), point.getY());
+		    }
+
+		    graphics.draw(geom);
+		}
+
+		imageRepresentation.flush();
+
+		return imageRepresentation;
+	}
+
     public static BufferedImage getImageRepresentationByWidth(VectorFile file, int width)
 	{
 		Size paperSize = file.getPaperSize(72);

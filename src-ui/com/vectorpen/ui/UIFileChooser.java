@@ -53,7 +53,9 @@ public final class UIFileChooser extends JFileChooser
 		getLocalizedStrings();
 
 		setDialogTitle(titleOpenDialog);
-		setCurrentDirectory(null);
+		// Home of user
+		//setCurrentDirectory(null);
+		setCurrentDirectory(new File("."));
 		setMultiSelectionEnabled(true);
 		setAcceptAllFileFilterUsed(false);
 

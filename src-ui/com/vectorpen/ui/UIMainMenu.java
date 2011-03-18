@@ -45,6 +45,7 @@ public final class UIMainMenu extends JMenuBar
 	private String textViewWin;
 	private String textHelp;
 	private JMenuItem addMenuItem;
+	private JMenuItem addBackgroundMenuItem;
 	private JMenuItem removeMenuItem;
 	private JMenuItem convertMenuItem;
 	private JMenuItem exitMenuItem;
@@ -92,10 +93,12 @@ public final class UIMainMenu extends JMenuBar
 
 			addMenuItem = new JMenuItem(Actions.getInstance().getAdd());
 			removeMenuItem = new JMenuItem(Actions.getInstance().getRemove());
+			addBackgroundMenuItem = new JMenuItem(Actions.getInstance().getAddBackground());
 			convertMenuItem = new JMenuItem(Actions.getInstance().getConvert());
 
 			fileMenu.add(addMenuItem);
 			fileMenu.add(removeMenuItem);
+			fileMenu.add(addBackgroundMenuItem);
 			fileMenu.addSeparator();
 			fileMenu.add(convertMenuItem);
 
@@ -111,11 +114,13 @@ public final class UIMainMenu extends JMenuBar
 
 			addMenuItem = new JMenuItem(Actions.getInstance().getAdd());
 			removeMenuItem = new JMenuItem(Actions.getInstance().getRemove());
+			addBackgroundMenuItem = new JMenuItem(Actions.getInstance().getAddBackground());
 			convertMenuItem = new JMenuItem(Actions.getInstance().getConvert());
 			exitMenuItem = new JMenuItem(Actions.getInstance().getExit());
 
 			fileMenu.add(addMenuItem);
 			fileMenu.add(removeMenuItem);
+			fileMenu.add(addBackgroundMenuItem);
 			fileMenu.addSeparator();
 			fileMenu.add(convertMenuItem);
 			fileMenu.addSeparator();
