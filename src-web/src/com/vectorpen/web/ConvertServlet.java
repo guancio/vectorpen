@@ -57,7 +57,8 @@ public class ConvertServlet extends HttpServlet {
 		    if ("PDF".equals(item.getFieldName()) && "PDF".equalsIgnoreCase(value))
 			outFormat = "PDF";
 			
-		} else {
+		}
+		else if ("noteField".equals(item.getFieldName())) {
 		    log.warning("Got an uploaded file: " + item.getFieldName() +
 				", name = " + item.getName());
 		    String [] fields = item.getName().split("\\.");
