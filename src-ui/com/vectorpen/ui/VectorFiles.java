@@ -31,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.io.OutputStream;
+import java.io.FileInputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.event.TableModelEvent;
@@ -443,6 +444,10 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 	}
 
+    public String getBackground() {
+	return background;
+    }
+
 	public void rotateByAngle(int angle)
 	{
 		int rows[] = UIMainTable.getInstance().getSelectedRows();
@@ -700,14 +705,21 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 				{
 					vectorFiles.add(this.vectorFiles.get(rows[index]));
 				}
-
-				PDFiTextModule.writePDFData(vectorFiles, docInfoDict, stream);
+				if (background != null) {
+				    PDFiTextModule.mergePDF(vectorFiles, docInfoDict, stream, new FileInputStream(background));
+				}
+				else
+				    PDFiTextModule.writePDFData(vectorFiles, docInfoDict, stream);
 			}
 			else
 			{
 				vectorFiles.add(this.vectorFiles.get(index));
 
-				PDFiTextModule.writePDFData(vectorFiles, docInfoDict, stream);
+				System.out.println(background);
+				if (background != null)
+				    PDFiTextModule.mergePDF(vectorFiles, docInfoDict, stream, new FileInputStream(background));
+				else
+				    PDFiTextModule.writePDFData(vectorFiles, docInfoDict, stream);
 			}
 		}
 		catch (Exception exception)

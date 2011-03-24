@@ -44,6 +44,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -1259,6 +1260,7 @@ public final class UIConvertDialog extends JDialog
 	private final class VPTableModel extends AbstractTableModel implements TableModelListener
 	{
 		private ArrayList<VectorFile> vectorFiles;
+	    private String background;
 
 		public VPTableModel()
 		{
@@ -1277,6 +1279,8 @@ public final class UIConvertDialog extends JDialog
 			}
 
 			this.vectorFiles = vectorFiles;
+
+			this.background = VectorFiles.getInstance().getBackground();
 
 			fireTableDataChanged();
 		}
@@ -1436,7 +1440,10 @@ public final class UIConvertDialog extends JDialog
 								subjectField.getText(),
 								keywords);
 
-						PDFiTextModule.writePDFData(tableModel.vectorFiles, docInfoDict, fileOutputStream);
+						if (tableModel.background != null)
+						    PDFiTextModule.mergePDF(tableModel.vectorFiles, docInfoDict, fileOutputStream, new FileInputStream(tableModel.background));
+						else
+						    PDFiTextModule.writePDFData(tableModel.vectorFiles, docInfoDict, fileOutputStream);
 
 						fileOutputStream.close();
 
@@ -1509,7 +1516,10 @@ public final class UIConvertDialog extends JDialog
 								vectorFiles = new ArrayList<VectorFile>();
 								vectorFiles.add(tableModel.vectorFiles.get(i));
 
-								PDFiTextModule.writePDFData(vectorFiles, docInfoDict, fileOutputStream);
+								if (tableModel.background != null)
+								    PDFiTextModule.mergePDF(tableModel.vectorFiles, docInfoDict, fileOutputStream, new FileInputStream(tableModel.background));
+								else
+								    PDFiTextModule.writePDFData(vectorFiles, docInfoDict, fileOutputStream);
 
 								fileOutputStream.close();
 
