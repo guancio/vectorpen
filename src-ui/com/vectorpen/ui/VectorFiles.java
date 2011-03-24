@@ -68,7 +68,7 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 	private ArrayList<VectorFile> vectorFiles;
 	private ArrayList<ImageIcon> previews;
 
-	private ArrayList<String> backgrounds;
+	private String background;
 
     // Open document
     private PdfDocument pdfDoc = null;
@@ -91,10 +91,8 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		vectorFiles = new ArrayList<VectorFile>();
 		previews = new ArrayList<ImageIcon>();
 
-		backgrounds = new ArrayList<String>();
-
+		background = null;
 		pdfDoc = null;
-
 	}
 
 	private void getLocalizedStrings()
@@ -138,11 +136,15 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 				if (vectorFile.getAspectRatio() == Size.PORTRAIT)
 				{
-				    image = ImageRepresentation.getImageRepresentationByHeight(vectorFile,PREVIEW_SIZE);
+				    //image = ImageRepresentation.getImageRepresentationByHeight(vectorFile,PREVIEW_SIZE);
+				    BufferedImage imgBg = getBasePageByHeight(row, PREVIEW_SIZE);
+				    image = ImageRepresentation.overlayImageRepresentationByHeight(imgBg, vectorFile,PREVIEW_SIZE);
 				}
 				else
 				{
-				    image = ImageRepresentation.getImageRepresentationByWidth(vectorFile, PREVIEW_SIZE);
+				    BufferedImage imgBg = getBasePageByWidth(row, PREVIEW_SIZE);
+				
+				    image = ImageRepresentation.overlayImageRepresentationByWidth(imgBg, vectorFile, PREVIEW_SIZE);
 				}
 
 				ImageIcon preview = previews.remove(row);
@@ -313,15 +315,19 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		for (int index = 0; index < count; index++)
 		{
 			VectorFile vectorFile = vectorFiles.get(index);
+			this.vectorFiles.add(vectorFile);
+
 			BufferedImage image;
 
 			if (vectorFile.getAspectRatio() == Size.PORTRAIT)
 			{
-			    image = ImageRepresentation.getImageRepresentationByHeight(vectorFile,PREVIEW_SIZE);
+			    BufferedImage imgBg = getBasePageByHeight(index, PREVIEW_SIZE);
+			    image = ImageRepresentation.overlayImageRepresentationByHeight(imgBg, vectorFile,PREVIEW_SIZE);
 			}
 			else
 			{
-			    image = ImageRepresentation.getImageRepresentationByWidth(vectorFile,PREVIEW_SIZE);
+			    BufferedImage imgBg = getBasePageByWidth(index, PREVIEW_SIZE);
+			    image = ImageRepresentation.overlayImageRepresentationByWidth(imgBg, vectorFile,PREVIEW_SIZE);
 			}
 
 			ImageIcon preview = new ImageIcon(image);
@@ -329,7 +335,6 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 			image.flush();
 			image = null;
 
-			this.vectorFiles.add(vectorFile);
 			previews.add(preview);
 		}
 
@@ -342,6 +347,8 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 		int count = rows.length - 1;
 
+		int minPage = -1;
+
 		for (int index = count; index >= 0; index--)
 		{
 			VectorFile vectorFile = vectorFiles.remove(rows[index]);
@@ -349,17 +356,51 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 
 			if (vectorFile != null) vectorFile = null;
 			if (preview != null) preview = null;
+
+			if (minPage < 0 || rows[index] < minPage)
+			    minPage = rows[index];
+		}
+
+
+
+		int size = vectorFiles.size();
+
+		for (int index = minPage; index < size; index++)
+		{
+			VectorFile vectorFile = vectorFiles.get(index);
+			BufferedImage image;
+
+			if (vectorFile.getAspectRatio() == Size.PORTRAIT)
+			{
+			    BufferedImage imgBg = getBasePageByHeight(index, PREVIEW_SIZE);
+			    image = ImageRepresentation.overlayImageRepresentationByHeight(imgBg, vectorFile,PREVIEW_SIZE);
+			}
+			else
+			{
+			    BufferedImage imgBg = getBasePageByWidth(index, PREVIEW_SIZE);
+			    image = ImageRepresentation.overlayImageRepresentationByWidth(imgBg, vectorFile,PREVIEW_SIZE);
+			}
+
+			ImageIcon preview = new ImageIcon(image);
+
+			image.flush();
+			image = null;
+
+			previews.set(index, preview);
 		}
 
 		fireTableRowsDeleted(rows[0], rows[count]);
 	}
 
-	public void addBackground(String file)
+	public void setBackground(String file)
 	{
 		try {
 		    if (pdfDoc != null)
 			pdfDoc.dispose();
 		    pdfDoc = null;
+		    background = file;
+		    if (file == null)
+			return;
 		    // Open document
 		    pdfDoc = new PdfDocument(file, null);
 		}
@@ -369,6 +410,37 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 		catch (PDFException ex) {
 		    ex.printStackTrace();
 		}
+
+		int rows[] = UIMainTable.getInstance().getSelectedRows();
+		int count = rows.length;
+		int size = vectorFiles.size();
+
+		for (int index = 0; index < size; index++)
+		{
+			VectorFile vectorFile = vectorFiles.get(index);
+			BufferedImage image;
+
+			if (vectorFile.getAspectRatio() == Size.PORTRAIT)
+			{
+			    BufferedImage imgBg = getBasePageByHeight(index, PREVIEW_SIZE);
+			    image = ImageRepresentation.overlayImageRepresentationByHeight(imgBg, vectorFile,PREVIEW_SIZE);
+			}
+			else
+			{
+			    BufferedImage imgBg = getBasePageByWidth(index, PREVIEW_SIZE);
+			    image = ImageRepresentation.overlayImageRepresentationByWidth(imgBg, vectorFile,PREVIEW_SIZE);
+			}
+
+			ImageIcon preview = new ImageIcon(image);
+
+			image.flush();
+			image = null;
+
+			previews.set(index, preview);
+		}
+
+		//		fireTableRowsUpdated(rows[0], rows[count-1]);
+
 	}
 
 	public void rotateByAngle(int angle)
@@ -460,6 +532,58 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 	return imageRepresentation;
     }
 
+    protected BufferedImage emptyPageByWidth(VectorFile file, int width) {
+	Size paperSize = file.getPaperSize(72);
+
+	int height = (int)(paperSize.getHeight() / (paperSize.getWidth() / width));
+
+	Size size = new Size(width, height);
+	Scale scale = new Scale(file.getSize(), size);
+
+	float lineWidth = file.getLineWidth() * (width / paperSize.getWidth());
+	if (lineWidth < VectorFile.LINE_WIDTH_MIN) lineWidth = VectorFile.LINE_WIDTH_MIN;
+	
+	BufferedImage imageRepresentation;
+	imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+
+	BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	
+	Graphics2D graphics = imageRepresentation.createGraphics();
+	graphics.setStroke(stroke);
+
+
+	graphics.setColor(java.awt.Color.WHITE);
+	graphics.fillRect(0, 0, width, height);
+	
+	return imageRepresentation;
+    }
+
+    protected BufferedImage emptyPageByHeight(VectorFile file, int height) {
+	Size paperSize = file.getPaperSize(72);
+
+	int width = (int)(paperSize.getWidth() / (paperSize.getHeight() / height));
+
+	Size size = new Size(width, height);
+	Scale scale = new Scale(file.getSize(), size);
+
+	float lineWidth = file.getLineWidth() * (width / paperSize.getWidth());
+	if (lineWidth < VectorFile.LINE_WIDTH_MIN) lineWidth = VectorFile.LINE_WIDTH_MIN;
+	
+	BufferedImage imageRepresentation;
+	imageRepresentation = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+
+	BasicStroke stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	
+	Graphics2D graphics = imageRepresentation.createGraphics();
+	graphics.setStroke(stroke);
+
+
+	graphics.setColor(java.awt.Color.WHITE);
+	graphics.fillRect(0, 0, width, height);
+	
+	return imageRepresentation;
+    }
+
     public BufferedImage getBasePage(int index) {
 	    int page = index+1;
 	    VectorFile file = vectorFiles.get(index);
@@ -484,6 +608,67 @@ public final class VectorFiles extends AbstractTableModel implements TableModelL
 	    }
 
 	    return img;
+    }
+    public BufferedImage getBasePageByWidth(int index, int width) {
+	int page = index+1;
+	VectorFile file = vectorFiles.get(index);
+	BufferedImage img = null;
+	Size paperSize = file.getPaperSize(72);
+	float zoom = width / paperSize.getWidth();
+
+	if (pdfDoc == null)
+	    return emptyPageByWidth(file, width);
+
+	if (pdfDoc.getPageCount() < page)
+	    return emptyPageByWidth(file, width);
+
+	// Get page in RGB
+	PdfPage pdfPage = pdfDoc.getPage(page, PdfDocument.IMAGE_TYPE_RGB, zoom, PdfPage.PAGE_ROTATE_AUTO);
+	if (pdfPage != null) {
+	    img = pdfPage.getImage();
+	    // Always make sure to dispose!!!
+	    pdfPage.dispose();
+
+	}
+	else {
+	    return emptyPageByWidth(file, width);
+	}
+	
+	return img;
+    }
+    public BufferedImage getBasePageByHeight(int index, int height) {
+	    int page = index+1;
+	    VectorFile file = vectorFiles.get(index);
+	    BufferedImage img = null;
+	Size paperSize = file.getPaperSize(72);
+
+	int width = (int)(paperSize.getWidth() / (paperSize.getHeight() / height));
+
+	Size size = new Size(width, height);
+	Scale scale = new Scale(file.getSize(), size);
+	
+	float zoom = width / paperSize.getWidth();
+
+	if (pdfDoc == null)
+	    return emptyPageByHeight(file, height);
+
+	if (pdfDoc.getPageCount() < page)
+	    return emptyPageByHeight(file, height);
+
+	// Get page in RGB
+	PdfPage pdfPage = pdfDoc.getPage(page, PdfDocument.IMAGE_TYPE_RGB, zoom, PdfPage.PAGE_ROTATE_AUTO);
+	if (pdfPage != null) {
+	    img = pdfPage.getImage();
+	    // Always make sure to dispose!!!
+	    pdfPage.dispose();
+
+	}
+	else {
+	    return emptyPageByHeight(file, height);
+	}
+	
+	return img;
+
     }
 
 	public BufferedImage getZoomedImageRepresentation(int index)
