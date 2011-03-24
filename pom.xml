@@ -1,27 +1,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.vectorpen.vectorpen</groupId>
-  <artifactId>core</artifactId>
-  <packaging>jar</packaging>
+  <groupId>com.vectorpen</groupId>
+  <artifactId>vectorpen</artifactId>
+  <packaging>pom</packaging>
   <version>1.1-SNAPSHOT</version>
-  <name>Vectorpen CORE</name>
+  <name>Vectorpen</name>
   <url>http://www.vectorpen.com</url>
 
+  <modules>
+    <module>core</module>
+    <module>cli</module>
+  </modules>
 
-  <parent>
-    <groupId>com.vectorpen</groupId>
-    <artifactId>vectorpen</artifactId>
-    <version>1.1-SNAPSHOT</version>
-  </parent>
+  <repositories>
+    <repository>
+      <id>itextpdf.com</id>
+      <name>Maven Repository for iText</name>
+      <url>http://maven.itextpdf.com/</url>
+    </repository>
+  </repositories>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.itextpdf</groupId>
-      <artifactId>itextpdf</artifactId>
-      <version>5.0.6</version>
-    </dependency>
-  </dependencies>
+  <!-- <dependencies> -->
+  <!--   <dependency> -->
+  <!--     <groupId>com.itextpdf</groupId> -->
+  <!--     <artifactId>itextpdf</artifactId> -->
+  <!--     <version>5.0.6</version> -->
+  <!--   </dependency> -->
+  <!-- </dependencies> -->
 
   <!-- <dependencies> -->
   <!--   <dependency> -->
